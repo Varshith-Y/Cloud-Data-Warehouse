@@ -5,11 +5,11 @@
 This project implements a complete **cloud-native data warehouse**
 using:
 
--   **Amazon S3** → Data lake storage\
--   **Snowflake** → Data warehouse\
--   **Bronze/Silver/Gold** layered architecture\
--   **Snowpipe / COPY INTO** for ingestion\
--   **Dimensional modelling (facts + dimensions)**\
+-   **Amazon S3** → Data lake storage
+-   **Snowflake** → Data warehouse
+-   **Bronze/Silver/Gold** layered architecture
+-   **Snowpipe / COPY INTO** for ingestion
+-   **Dimensional modelling (facts + dimensions)**
 -   **Data quality validation**
 
 The warehouse ingests raw CRM & ERP datasets from S3, processes them in
