@@ -6,14 +6,14 @@ This project implements a complete **cloud-native data warehouse**
 using:
 
 -   **Amazon S3** → Data lake storage
--   **Snowflake** → Data warehouse
+-   **Snowflake** → Cloud data warehouse
 -   **Bronze/Silver/Gold** layered architecture
--   **Snowpipe / COPY INTO** for ingestion
--   **Dimensional modelling (facts + dimensions)**
+-   **COPY INTO** ingestion
+-   **Dimensional modelling** (facts + dimensions)
 -   **Data quality validation**
 
-The warehouse ingests raw CRM & ERP datasets from S3, processes them in
-Snowflake, and exposes analytics-ready data models for BI & reporting.
+This README explains the cloud architecture while **masking all
+sensitive account details** for security.
 
 ------------------------------------------------------------------------
 
@@ -21,42 +21,33 @@ Snowflake, and exposes analytics-ready data models for BI & reporting.
 
 ### **1️⃣ Data Source**
 
-CSV files stored in:
+CSV files stored in S3:
 
-    s3://datawarehousesourcefiles/datasets/
+    s3://<masked-bucket-name>/datasets/
 
-### **2️⃣ Bronze Layer (Raw Ingestion)**
+### **2️⃣ Bronze Layer**
 
--   Raw CRM & ERP data loaded as-is into Snowflake BRONZE tables.
--   Loaded via:
+Raw landing tables loaded directly from an external Snowflake stage.
 
-``` sql
-COPY INTO <table> FROM @BRONZE_STAGE/<path>;
-```
+### **3️⃣ Silver Layer**
 
-### **3️⃣ Silver Layer (Cleansed + Conformed)**
+Cleansed, transformed, standardized data: - Date conversions\
+- Gender + marital status mapping\
+- Product dimension parsing\
+- Sales/price recalculation\
+- Country normalization
 
--   Data standardised & cleaned:
-    -   Date parsing\
-    -   Gender and marital status mapping\
-    -   Product dimension parsing\
-    -   Price & sales recalculation logic\
-    -   Country standardisation\
--   Produced via SQL transformations.
+### **4️⃣ Gold Layer**
 
-### **4️⃣ Gold Layer (Analytics Star Schema)**
-
--   **DIM_CUSTOMERS**
--   **DIM_PRODUCTS**
--   **FACT_SALES**
-
-Gold views power BI dashboards and reporting.
+Analytics-ready star schema: - `DIM_CUSTOMERS`\
+- `DIM_PRODUCTS`\
+- `FACT_SALES`
 
 ------------------------------------------------------------------------
 
-## 🚀 Implemented Objects
+## 🚀 Implemented Components
 
-### **Snowflake Objects**
+### **Snowflake**
 
   Type                  Name
   --------------------- ----------------------------
@@ -65,19 +56,41 @@ Gold views power BI dashboards and reporting.
   Storage Integration   `S3_INT`
   Stage                 `BRONZE_STAGE`
   File Format           `CSV_STD`
-  Views                 Gold layer star schema
 
-### **AWS Components**
+### **AWS**
 
   Service      Purpose
-  ------------ ---------------------------------
-  S3 Bucket    Store raw datasets
-  IAM Role     Allow Snowflake to read from S3
-  IAM Policy   `SnowflakeS3ReadAccessPolicy`
+  ------------ ------------------------------------------------
+  S3 Bucket    Raw data lake
+  IAM Role     Allows Snowflake to read S3 (masked ARN below)
+  IAM Policy   Read-only S3 policy for Snowflake
 
 ------------------------------------------------------------------------
 
-## 📂 Folder Structure
+## 🪣 Snowflake ↔ S3 Integration (Masked)
+
+### IAM Role ARN (masked)
+
+    arn:aws:iam::<AWS-ACCOUNT-ID-MASKED>:role/snowflake_access_role
+
+### Trusted Snowflake Principal (masked)
+
+    arn:aws:iam::<SNOWFLAKE-ACCOUNT-ID-MASKED>:user/<masked-user-name>
+
+### External ID (masked)
+
+    DR45386_SFCRole=<masked-token>
+
+### Allowed S3 Location (masked)
+
+    s3://<masked-bucket-name>/datasets/
+
+All values required for IAM trust and stage integration have been
+intentionally anonymized.
+
+------------------------------------------------------------------------
+
+## 📂 Repository Structure
 
     ├── 01_bronze_layer_snowflake.sql
     ├── 02_silver_layer_snowflake.sql
@@ -86,38 +99,18 @@ Gold views power BI dashboards and reporting.
 
 ------------------------------------------------------------------------
 
-## 🪣 S3 → Snowflake Integration Summary
-
-### IAM Role ARN
-
-    arn:aws:iam::650251713889:role/snowflake_access_role
-
-### Allowed S3 Location
-
-    s3://datawarehousesourcefiles/datasets/
-
-### Trusted Snowflake Principal
-
-    arn:aws:iam::501235162090:user/ksc91000-s
-
-### External ID (Snowflake)
-
-    DR45386_SFCRole=2_ftYruU+tzTE9OdeQ3NzNRq5/mhw=
-
-------------------------------------------------------------------------
-
 ## 🧪 Data Quality Checks
 
-Quality checks implemented for:
+Silver and Gold layers include validations for:
 
-✔ Duplicate keys\
-✔ Invalid dates\
-✔ Negative or missing financial fields\
-✔ Surrogate key uniqueness\
-✔ Fact ↔ dimension referential integrity\
-✔ Product date range validation
+✔ Duplicate keys
+✔ Surrogate key uniqueness
+✔ Invalid dates
+✔ Negative or missing financial values
+✔ Product date range issues
+✔ Fact-table orphan checks
 
-Scripts are included for full QA testing.
+All implemented using Snowflake SQL.
 
 ------------------------------------------------------------------------
 
@@ -150,25 +143,24 @@ ORDER BY total_sales DESC;
 
 ------------------------------------------------------------------------
 
-## ✔ Final Notes
+## ✔ Summary
 
-This cloud data warehouse demonstrates:
+This project demonstrates:
 
--   Real-world ELT pipelines\
--   Cloud-based ingestion\
--   Standardised data layers\
--   Dimensional modelling\
--   Secure S3 ↔ Snowflake integration\
--   Production-grade data quality checks
+-   Secure cloud data ingestion
+-   Proper IAM role delegation (masked in this README)
+-   Snowflake ELT transformations
+-   Bronze/Silver/Gold architecture
+-   Analytics-ready star schema
+-   Production-style data quality checks
 
-Perfect for showcasing **Data Engineering / Cloud Engineering** skills.
+All sensitive identifiers and account numbers have been masked for
+security.
 
 ------------------------------------------------------------------------
 
 ## 📬 Contact
 
-If you'd like help extending this into: - BI dashboards (Power BI /
-QuickSight) - Orchestrated pipelines (Airflow / AWS Glue) - Data lineage
-or documentation
-
-Feel free to reach out!
+Feel free to reach out if you want help extending this into: - Automated
+pipelines (Airflow / Glue) - BI Dashboards (Power BI / QuickSight) -
+Documentation / diagrams
