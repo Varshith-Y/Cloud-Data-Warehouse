@@ -31,16 +31,16 @@ Raw landing tables loaded directly from an external Snowflake stage.
 
 ### **3️⃣ Silver Layer**
 
-Cleansed, transformed, standardized data: - Date conversions\
-- Gender + marital status mapping\
-- Product dimension parsing\
-- Sales/price recalculation\
+Cleansed, transformed, standardized data: - Date conversions
+- Gender + marital status mapping
+- Product dimension parsing
+- Sales/price recalculation
 - Country normalization
 
 ### **4️⃣ Gold Layer**
 
-Analytics-ready star schema: - `DIM_CUSTOMERS`\
-- `DIM_PRODUCTS`\
+Analytics-ready star schema: - `DIM_CUSTOMERS`
+- `DIM_PRODUCTS`
 - `FACT_SALES`
 
 ------------------------------------------------------------------------
@@ -49,13 +49,14 @@ Analytics-ready star schema: - `DIM_CUSTOMERS`\
 
 ### **Snowflake**
 
-  Type                  Name
-  --------------------- ----------------------------
-  Database              `DATAWAREHOUSE`
-  Schemas               `BRONZE`, `SILVER`, `GOLD`
-  Storage Integration   `S3_INT`
-  Stage                 `BRONZE_STAGE`
-  File Format           `CSV_STD`
+| Type                | Name                          |
+|---------------------|--------------------------------|
+| Database            | `DATAWAREHOUSE`               |
+| Schemas             | `BRONZE`, `SILVER`, `GOLD`    |
+| Storage Integration | `S3_INT`                      |
+| Stage               | `BRONZE_STAGE`                |
+| File Format         | `CSV_STD`                     |
+
 
 ### **AWS**
 
@@ -159,8 +160,4 @@ security.
 
 ------------------------------------------------------------------------
 
-## 📬 Contact
 
-Feel free to reach out if you want help extending this into: - Automated
-pipelines (Airflow / Glue) - BI Dashboards (Power BI / QuickSight) -
-Documentation / diagrams
