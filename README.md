@@ -69,19 +69,19 @@ Analytics-ready star schema: - `DIM_CUSTOMERS`\
 
 ## 🪣 Snowflake ↔ S3 Integration (Masked)
 
-### IAM Role ARN (masked)
+### IAM Role ARN 
 
     arn:aws:iam::<AWS-ACCOUNT-ID-MASKED>:role/snowflake_access_role
 
-### Trusted Snowflake Principal (masked)
+### Trusted Snowflake Principal 
 
     arn:aws:iam::<SNOWFLAKE-ACCOUNT-ID-MASKED>:user/<masked-user-name>
 
-### External ID (masked)
+### External ID 
 
     DR45386_SFCRole=<masked-token>
 
-### Allowed S3 Location (masked)
+### Allowed S3 Location 
 
     s3://<masked-bucket-name>/datasets/
 
